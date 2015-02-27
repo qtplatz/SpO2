@@ -46,9 +46,14 @@ find_package(Qt5 CONFIG REQUIRED Core Widgets Gui Svg PrintSupport )
 
 find_package(Boost COMPONENTS program_options system )
 
-add_executable( spo2 ${spo2_SOURCES} ${Resources} )
+if ( WIN32 )
+  add_executable( spo2 WIN32 ${spo2_SOURCES} ${Resources} )
+else()
+  add_executable( spo2 ${spo2_SOURCES} ${Resources} )
+endif()
 
 target_link_libraries( spo2 LINK_PUBLIC
+  Qt5::WinMain
   adplot
   adportable
   adutils

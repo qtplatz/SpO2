@@ -52,7 +52,7 @@ namespace malpix { namespace mpx4 {
         struct user_preference {
             static boost::filesystem::path path( QSettings * settings ) {
                 boost::filesystem::path dir( settings->fileName().toStdWString() );
-                return dir.remove_filename() / "mpx4";
+                return dir.remove_filename() / "spo2";
             }
         };
         
@@ -60,8 +60,8 @@ namespace malpix { namespace mpx4 {
         class document::impl : public adinterface::fsm::handler {
         public:
             impl() : settings_( new QSettings( QSettings::IniFormat, QSettings::UserScope
-                                               , QLatin1String( "MPX4" )
-                                               , QLatin1String( "MPX4" ) ) )
+                                               , QLatin1String( "SPO2" )
+                                               , QLatin1String( "SPO2" ) ) )
                    , automaton_( this )
                    , instStatus_( adinterface::instrument::eOff ) {
 

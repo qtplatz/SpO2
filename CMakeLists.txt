@@ -1,6 +1,3 @@
-# CMakeLists files in this project malpix4
-# refer to the root source directory of the project as ${HELLO_SOURCE_DIR} and
-# to the root binary directory of the project as ${HELLO_BINARY_DIR}.
 
 project (spo2)
 cmake_minimum_required (VERSION 2.8.11)
@@ -30,10 +27,10 @@ find_package( Boost 1.57 REQUIRED )
 add_definitions(-DUNICODE -D_UNICODE)
 
 if (WIN32)
-  set(CMAKE_INSTALL_PREFIX C:/malpix )
+  set(CMAKE_INSTALL_PREFIX C:/SpO2 )
   add_definitions(-D_SCL_SECURE_NO_WARNINGS)
 else()
-  set(CMAKE_INSTALL_PREFIX /opt/local/malpix )  
+  set(CMAKE_INSTALL_PREFIX /opt/local/SpO2 )  
 endif()
 
 set(CMAKE_DEBUG_POSTFIX d)
