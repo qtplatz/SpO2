@@ -1,0 +1,78 @@
+==============
+malpix4 readme
+==============
+
+This is the git repository of malpix4.  As of the day writing this
+(27-OCT-2014), origin of the repository is hosted on:
+
+   ssh://multum.jp/var/lib/public_git/malpix4
+
+The reposition folder structure is;
+
+- transition
+
+  This is all electrical matrials transferred from Dr. Kawai as fo
+  23-OCT-2014
+
+- malpix
+
+  Start with source files transfered from Dr. Kawai with modified
+  build system and folder structure in order to transition for large
+  scale software.  First, I've changed build system with cmake over
+  Makefile.  The cmake is widely accepted from many middle to large
+  scale software projects, and flexible enough for not only
+  multi-platform support but also common software foundations such as
+  Qt, Boost and so forth.
+
+- sandbox
+
+  As folder name suggest, this is playground for trial software.  Make
+  sevaral small snipped of software under this folder and validate
+  algorithms.
+
+=====================
+Build malpix software
+=====================
+
+A part of malpix code is depend on QtPlatz project.  QtPlatz source
+code should be exist under malpix4 (top) directory which can be done
+as;
+
+$ cd <malpix4 top directory>
+$ git clone git://github.com/qtplatz/qtplatz.git
+
+That results top directory looks like
+
+malpix4/malpix
+malpix4/qtplatz      <-- qtplatz add here
+malpix4/sandbox
+malpix4/transition
+malpix4/profile.bat
+malpix4/README       <-- this file
+
+In case you have qtplatz soruce tree for different location, you can
+edit malpix4/malpix/CMakeLists.txt file and replace QTPLATZ_SOURCE_DIR
+value as appropriate.
+
+--------------------
+Build on Windows
+--------------------
+
+Follow the command sequence below on the VisualStudio command console;
+
+$ mkdir build
+$ cmake -G "Visual Studio 12 Win64" ..\malpix
+
+, and then open ~\malpix4\build\malpix.sln from VS 2013 IDE.
+
+---------------------
+Build on Linux or Mac
+--------------------
+  mkdir build
+  cmake ../malpix
+  make -j4
+
+==================
+Toshinobu Hondo, Ph.D.
+MS-Cheminformatics LLC
+toshi.hondo@qtplatz.com
