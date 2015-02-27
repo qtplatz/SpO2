@@ -31,12 +31,6 @@
 #include "mpx4constants.hpp"
 #include "malpix4.hpp"
 #include "sampleprocessor.hpp"
-#include <mpxcontrols/mpx4method.hpp>
-//#include <adcontrols/controlmethod.hpp>
-//#include <adcontrols/mappedimage.hpp>
-//#include <adcontrols/mappedspectra.hpp>
-//#include <adcontrols/massspectrum.hpp>
-//#include <adcontrols/samplerun.hpp>
 #include <adinterface/automaton.hpp>
 #include <adportable/profile.hpp>
 #include <adfs/cpio.hpp>
@@ -75,8 +69,6 @@ namespace malpix { namespace mpx4 {
             }
             
             std::shared_ptr< QSettings > settings_;
-            std::shared_ptr< mpxcontrols::Mpx4Method > method_;
-            boost::numeric::ublas::matrix<uint16_t> vthComp_;
             adinterface::fsm::controller automaton_;
             adinterface::instrument::eInstStatus instStatus_;
 
