@@ -23,10 +23,6 @@
 **************************************************************************/
 #include "mainwindow.hpp"
 #include "document.hpp"
-#include "malpix4.hpp"
-#include "mpx4wnd.hpp"
-#include "mpx4constants.hpp"
-#include "spectrogramplot.hpp"
 #include "knob.hpp"
 #include "plot.hpp"
 #include "wheelbox.hpp"
@@ -358,40 +354,6 @@ MainWindow::createMidStyledBar()
             //----------
             toolBarLayout->addWidget( new Manhattan::StyledSeparator );
             //----------
-            // Core::Context context( (Core::Id( Core::Constants::C_GLOBAL )) );
-            
-            //actionApply_ = new QAction( QIcon( Constants::ICON_METHOD_APPLY ), tr("Apply" ), this );
-            //bool res = connect( actionApply_, SIGNAL( triggered() ), this, SLOT( actionApply() ) );
-            //assert( res );
-            //am->registerAction( actionApply_, Constants::METHOD_APPLY, context );
-            //toolBarLayout->addWidget( toolButton( am->command( Constants::METHOD_APPLY )->action() ) );
-#if 0
-            QComboBox * features = new QComboBox;
-            features->addItem( tr("Centroid") );
-            features->addItem( tr("Targeting") ); // Centroid + find targets
-            features->addItem( tr("MS Calibration") );
-            features->addItem( tr("Find peaks") );
-            toolBarLayout->addWidget( features );
-#endif
-            //connect( features, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &MainWindow::handleFeatureSelected ); // (int) ) );
-            //connect( features, static_cast<void (QComboBox::*)(int)>(&QComboBox::activated), this, &MainWindow::handleFeatureActivated );
-            //features->setContextMenuPolicy( Qt::CustomContextMenu );
-
-            // connect( features, &QComboBox::customContextMenuRequested, [=] ( QPoint pt ){
-            //         QMenu menu;
-            //         menu.addAction( am->command( Constants::PROCESS_ALL_CHECKED )->action() );
-            //         menu.exec( features->mapToGlobal( pt ) );
-            //     } );
-
-            //----------
-            //toolBarLayout->addWidget( new Manhattan::StyledSeparator );
-            toolBarLayout->addWidget( new QLabel( tr( "Process Method:" ) ) );
-            auto edit = new QLineEdit;
-            edit->setObjectName( malpix::mpx4::Constants::EDIT_PROCMETHOD );
-            edit->setEnabled( false );
-            toolBarLayout->addWidget( edit );
-            toolBarLayout->addItem( new QSpacerItem( 40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum ) );
-    //}
     }
     return toolBar2;
 }

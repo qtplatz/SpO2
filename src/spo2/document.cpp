@@ -28,9 +28,6 @@
 #endif
 
 #include "document.hpp"
-#include "mpx4constants.hpp"
-#include "malpix4.hpp"
-#include "sampleprocessor.hpp"
 #include <adinterface/automaton.hpp>
 #include <adportable/profile.hpp>
 #include <adfs/cpio.hpp>

@@ -10,8 +10,6 @@ set( spo2_SOURCES
   main.cpp
   mainwindow.cpp
   mainwindow.hpp  
-  mpx4wnd.cpp
-  mpx4wnd.hpp
   masterobserver.hpp
   plot.cpp
   wheelbox.cpp
