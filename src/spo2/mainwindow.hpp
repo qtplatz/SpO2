@@ -33,6 +33,7 @@
 class Plot;
 class Knob;
 class WheelBox;
+class LCDBox;
 
 QT_FORWARD_DECLARE_CLASS(QAction)
 QT_FORWARD_DECLARE_CLASS(QComboBox)
@@ -114,10 +115,12 @@ Q_SIGNALS:
 
     Knob *d_frequencyKnob;
     Knob *d_amplitudeKnob;
-    WheelBox *d_timerWheel;
     WheelBox *d_intervalWheel;
-    Plot *d_plot;
-
+    Plot *d_plot1;
+    Plot *d_plot2;    
+    LCDBox * d_lcd1;
+    LCDBox * d_lcd2;
+    LCDBox * d_lcd3;
 };
 
 #endif // MAINWINDOW_HPP

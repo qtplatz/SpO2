@@ -58,13 +58,12 @@ protected:
 };
 #endif
 
-Plot::Plot( QWidget *parent ):
-    QwtPlot( parent ),
-    d_interval( 10.0 ), // seconds
-    d_timerId( -1 )
+Plot::Plot( const QString& title, QWidget *parent ) : QwtPlot( parent )
+                                                    , d_interval( 10.0 ) // seconds
+                                                    , d_timerId( -1 )
 {
     // Assign a title
-    setTitle( "Testing Refresh Rates" );
+    setTitle( title );
 
     QwtPlotCanvas *canvas = new QwtPlotCanvas();
     canvas->setFrameStyle( QFrame::Box | QFrame::Plain );

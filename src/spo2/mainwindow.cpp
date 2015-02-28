@@ -26,18 +26,10 @@
 #include "knob.hpp"
 #include "plot.hpp"
 #include "wheelbox.hpp"
-
+#include "lcdbox.hpp"
 #include <manhattanstyle.h> // qt-manhattan-style
 #include <styledbar.h>      // qt-manhattan-style
 #include <stylehelper.h>    // qt-manhattan-style
-// #include <adinterface/instrument.hpp>
-// #include <adwidgets/centroidform.hpp>
-// #include <adwidgets/mspeaktable.hpp>
-// #include <adwidgets/mscalibratewidget.hpp>
-// #include <adwidgets/targetingwidget.hpp>
-//#include <mpxcontrols/mpx4method.hpp>
-//#include <mpxwidgets/vthcomptable.hpp>
-//#include <mpxwidgets/mpx4form.hpp>
 #include <qtwrapper/trackingenabled.hpp>
 #include <qtwrapper/waitcursor.hpp>
 #include <boost/any.hpp>
@@ -52,6 +44,7 @@
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QLabel>
+#include <QLCDNumber>
 #include <QLineEdit>
 #include <QMenu>
 #include <QMenuBar>
@@ -64,17 +57,22 @@
 #include <functional>
 
 #ifdef Q_WS_MAC
-const QString rsrcPath = ":/mpx4w/images/mac";
+const QString rsrcPath = ":/spo2/images/mac";
 #else
-const QString rsrcPath = ":/mpx4w/images/win";
+const QString rsrcPath = ":/spo2/images/win";
 #endif
 
 MainWindow::MainWindow(QWidget *parent) : Manhattan::FancyMainWindow(parent)
+                                        , d_lcd1(0)
+                                        , d_lcd2(0)
+                                        , d_lcd3(0)
 {
     Manhattan::Utils::StyleHelper::setBaseColor( QColor( Manhattan::Utils::StyleHelper::DEFAULT_BASE_COLOR ) );
 
     malpix::mpx4::document::instance()->initialSetup();
 
+    setWindowTitle( "SpO2" );
+    
     setDockNestingEnabled( true );
     setCorner( Qt::BottomLeftCorner, Qt::LeftDockWidgetArea );
     setCorner( Qt::BottomRightCorner, Qt::BottomDockWidgetArea );
@@ -101,7 +99,10 @@ MainWindow::MainWindow(QWidget *parent) : Manhattan::FancyMainWindow(parent)
     //--------
     const double intervalLength = 10.0; // seconds
 
-    d_plot = new Plot( this );
+    d_plot1 = new Plot( "&lambda;<sub>1</sub>", this );
+    d_plot2 = new Plot( "&lambda;<sub>2</sub>", this );   
+    d_plot1->setMinimumHeight( 20 );
+    d_plot2->setMinimumHeight( 20 );
 	//d_plot->setIntervalLength(intervalLength);
 
     d_amplitudeKnob = new Knob( "Amplitude", 0.0, 200.0, this );
@@ -113,24 +114,37 @@ MainWindow::MainWindow(QWidget *parent) : Manhattan::FancyMainWindow(parent)
     d_intervalWheel = new WheelBox( "Displayed [s]", 1.0, 100.0, 1.0, this );
     d_intervalWheel->setValue( intervalLength );
 
-    d_timerWheel = new WheelBox( "Sample Interval [ms]", 0.0, 20.0, 0.1, this );
-    d_timerWheel->setValue( 10.0 );
+    // d_timerWheel = new WheelBox( "Sample Interval [ms]", 0.0, 20.0, 0.1, this );
+    // d_timerWheel->setValue( 10.0 );
+
+    auto gridLayout = new QGridLayout();
+    d_lcd1 = new LCDBox( "&lambda;<sub>1</sub>", gridLayout, 0 );
+    d_lcd2 = new LCDBox( "&lambda;<sub>2</sub>", gridLayout, 1 );
+    d_lcd3 = new LCDBox( "&lambda;<sub>1</sub>/&lambda;<sub>2</sub>", gridLayout, 2 );
+    gridLayout->setColumnStretch( 0, 10 );
 
     QVBoxLayout* vLayout1 = new QVBoxLayout();
     vLayout1->addWidget( d_intervalWheel );
-    vLayout1->addWidget( d_timerWheel );
+
+    vLayout1->addLayout( gridLayout );
+    
     vLayout1->addStretch( 10 );
     vLayout1->addWidget( d_amplitudeKnob );
     vLayout1->addWidget( d_frequencyKnob );
 
+    auto vLayout2 = new QVBoxLayout();
+    vLayout2->addWidget( d_plot1, 5 );
+    vLayout2->addWidget( d_plot2, 5 );
+
     QHBoxLayout *layout = new QHBoxLayout( widget );
-    layout->addWidget( d_plot, 10 );
+
+    layout->addLayout( vLayout2 );
     layout->addLayout( vLayout1 );
+    layout->setStretchFactor( vLayout2, 10 );
 
     connect( d_amplitudeKnob, SIGNAL( valueChanged( double ) ), SIGNAL( amplitudeChanged( double ) ) );
     connect( d_frequencyKnob, SIGNAL( valueChanged( double ) ), SIGNAL( frequencyChanged( double ) ) );
-    connect( d_timerWheel, SIGNAL( valueChanged( double ) ),    SIGNAL( signalIntervalChanged( double ) ) );
-    connect( d_intervalWheel, SIGNAL( valueChanged( double ) ), d_plot, SLOT( setIntervalLength( double ) ) );
+    connect( d_intervalWheel, SIGNAL( valueChanged( double ) ), d_plot1, SLOT( setIntervalLength( double ) ) );
 }
 
 MainWindow::~MainWindow()
@@ -376,28 +390,7 @@ MainWindow::handleFeatureActivated( int )
 void
 MainWindow::onInitialUpdate()
 {
-#if 0
-	qtwrapper::TrackingEnabled<Manhattan::FancyMainWindow> x( *this );
-    
-    for ( auto& widget: dockWidgets() ) {
-        widget->setFloating( false );
-        removeDockWidget( widget );
-    }
-    size_t npos = 0;
-    for ( auto widget: dockWidgets() ) {
-        addDockWidget( Qt::BottomDockWidgetArea, widget );
-        widget->show();
-        if ( npos++ >= 2 )
-            tabifyDockWidget( dockWidgets()[ 1 ], widget );
-    }
-	//dockWidgets().at(1)->raise();
-
-    auto& m = malpix::mpx4::document::instance()->vthComp();
-    if ( auto p = findChild< malpix::mpxwidgets::VthCompTable *>() )
-        p->setData( m );
-#endif
 }
-
 
 void
 MainWindow::start()
@@ -418,5 +411,5 @@ double MainWindow::amplitude() const
 
 double MainWindow::signalInterval() const
 {
-    return d_timerWheel->value();
+    return 1; // d_timerWheel->value();
 }

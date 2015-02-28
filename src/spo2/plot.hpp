@@ -13,7 +13,7 @@ class Plot: public QwtPlot
     Q_OBJECT
 
 public:
-    Plot( QWidget* = NULL );
+    Plot( const QString& title, QWidget* = NULL );
 
 public Q_SLOTS:
     void setSettings( const Settings & );

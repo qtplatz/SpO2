@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/mpx4w">
+    <qresource prefix="/spo2">
         <file>images/mac/editcopy.png</file>
         <file>images/mac/editcut.png</file>
         <file>images/mac/editpaste.png</file>
@@ -38,7 +38,6 @@
         <file>images/win/textunder.png</file>
         <file>images/win/zoomin.png</file>
         <file>images/win/zoomout.png</file>
-        <file>wordlist.txt</file>
         <file>images/Button Add.png</file>
         <file>images/Button Cancel.png</file>
         <file>images/Button Close.png</file>

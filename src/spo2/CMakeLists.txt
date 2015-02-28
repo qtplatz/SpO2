@@ -18,6 +18,7 @@ set( spo2_SOURCES
   curvedata.cpp
   samplingthread.cpp
   circularbuffer.cpp
+  lcdbox.cpp
   )
 
 # Find includes in corresponding build directories
