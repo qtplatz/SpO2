@@ -25,6 +25,7 @@
 #include "document.hpp"
 #include "knob.hpp"
 #include "plot.hpp"
+#include "plot3.hpp"
 #include "wheelbox.hpp"
 #include "lcdbox.hpp"
 #include <manhattanstyle.h> // qt-manhattan-style
@@ -99,7 +100,7 @@ MainWindow::MainWindow(QWidget *parent) : Manhattan::FancyMainWindow(parent)
     //--------
     const double intervalLength = 10.0; // seconds
 
-    d_plot1 = new Plot( "&lambda;<sub>1</sub>/&lambda;<sub>2</sub>", this );
+    d_plot1 = new Plot3( "&lambda;<sub>1</sub>/&lambda;<sub>2</sub>", this );
     d_plot2 = new Plot( "Pressure", this );
     d_plot1->setMinimumHeight( 20 );
     d_plot2->setMinimumHeight( 20 );
@@ -150,7 +151,7 @@ MainWindow::MainWindow(QWidget *parent) : Manhattan::FancyMainWindow(parent)
     connect( d_frequencyKnob, SIGNAL( valueChanged( double ) ), SIGNAL( frequencyChanged( double ) ) );
     connect( d_intervalWheel, SIGNAL( valueChanged( double ) ), d_plot1, SLOT( setIntervalLength( double ) ) );
 
-    connect( d_plot1, &Plot::onData, this, &MainWindow::handleData );
+    connect( d_plot1, &Plot3::onData, this, &MainWindow::handleData );
     connect( d_plot2, &Plot::onData, this, &MainWindow::handleData );    
 }
 

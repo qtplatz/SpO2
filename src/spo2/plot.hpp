@@ -34,10 +34,10 @@ private:
 
     QwtSystemClock d_clock;
     double d_interval;
-
     int d_timerId;
-
     Settings d_settings;
+
+    
 };
 
 #endif

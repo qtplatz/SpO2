@@ -12,6 +12,7 @@ set( spo2_SOURCES
   mainwindow.hpp  
   masterobserver.hpp
   plot.cpp
+  plot3.cpp  
   wheelbox.cpp
   knob.cpp
   signaldata.cpp

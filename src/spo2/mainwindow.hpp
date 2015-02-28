@@ -32,6 +32,7 @@
 #include <chrono>
 
 class Plot;
+class Plot3;
 class Knob;
 class WheelBox;
 class LCDBox;
@@ -116,8 +117,8 @@ Q_SIGNALS:
     Knob *d_frequencyKnob;
     Knob *d_amplitudeKnob;
     WheelBox *d_intervalWheel;
-    Plot *d_plot1;
-    Plot *d_plot2;    
+    Plot3 *d_plot1;
+    Plot  *d_plot2;    
     LCDBox * d_lcd1;
     LCDBox * d_lcd2;
     LCDBox * d_lcd3;
