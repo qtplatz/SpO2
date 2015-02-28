@@ -99,10 +99,14 @@ MainWindow::MainWindow(QWidget *parent) : Manhattan::FancyMainWindow(parent)
     //--------
     const double intervalLength = 10.0; // seconds
 
-    d_plot1 = new Plot( "&lambda;<sub>1</sub>", this );
-    d_plot2 = new Plot( "&lambda;<sub>2</sub>", this );   
+    d_plot1 = new Plot( "&lambda;<sub>1</sub>/&lambda;<sub>2</sub>", this );
+    d_plot2 = new Plot( "Pressure", this );
     d_plot1->setMinimumHeight( 20 );
     d_plot2->setMinimumHeight( 20 );
+    // d_plot1->enableAxis( QwtPlot::yRight );
+    d_plot1->setAxisTitle( QwtPlot::yLeft, "Ratio" );
+    d_plot2->setAxisTitle( QwtPlot::yLeft, "kPa" );
+
 	//d_plot->setIntervalLength(intervalLength);
 
     d_amplitudeKnob = new Knob( "Amplitude", 0.0, 200.0, this );
@@ -145,6 +149,9 @@ MainWindow::MainWindow(QWidget *parent) : Manhattan::FancyMainWindow(parent)
     connect( d_amplitudeKnob, SIGNAL( valueChanged( double ) ), SIGNAL( amplitudeChanged( double ) ) );
     connect( d_frequencyKnob, SIGNAL( valueChanged( double ) ), SIGNAL( frequencyChanged( double ) ) );
     connect( d_intervalWheel, SIGNAL( valueChanged( double ) ), d_plot1, SLOT( setIntervalLength( double ) ) );
+
+    connect( d_plot1, &Plot::onData, this, &MainWindow::handleData );
+    connect( d_plot2, &Plot::onData, this, &MainWindow::handleData );    
 }
 
 MainWindow::~MainWindow()
@@ -413,3 +420,19 @@ double MainWindow::signalInterval() const
 {
     return 1; // d_timerWheel->value();
 }
+
+void
+MainWindow::handleData( double )
+{
+    auto tp = std::chrono::steady_clock::now();
+    auto duration = std::chrono::duration_cast< std::chrono::milliseconds >( tp - tp_ );
+    if ( duration.count() > 500 ) {
+        tp_ = tp;
+        auto p1 = d_plot1->sample();
+        auto p2 = d_plot2->sample( p1.first );
+        d_lcd1->setValue( p1.second );
+        d_lcd2->setValue( p2.second );
+        d_lcd3->setValue( p1.second / p2.second );                
+    }
+}
+    

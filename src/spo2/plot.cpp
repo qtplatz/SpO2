@@ -203,6 +203,9 @@ void Plot::timerEvent( QTimerEvent * )
     CircularBuffer *buffer = static_cast<CircularBuffer *>( d_curve->data() );
     buffer->setReferenceTime( d_clock.elapsed() / 1000.0 );
 
+    auto pt = buffer->sample( buffer->size() - 1 );
+    emit onData( pt.y() );
+
     if ( d_settings.updateType == Settings::RepaintCanvas )
     {
         // the axes in this example doesn't change. So all we need to do
@@ -214,4 +217,14 @@ void Plot::timerEvent( QTimerEvent * )
     {
         replot();
     }
+}
+
+std::pair< int, double >
+Plot::sample( int pos )
+{
+    CircularBuffer *buffer = static_cast<CircularBuffer *>( d_curve->data() );
+    if ( pos < 0 )
+        pos = buffer->size() - 1;
+    auto pt = buffer->sample( pos );
+    return std::make_pair( pos, pt.y() );
 }

@@ -25,6 +25,7 @@
 #pragma once
 
 #include <QWidget>
+#include <chrono>
 
 class QLabel;
 class QLCDNumber;
@@ -42,5 +43,6 @@ public:
 private:
     QLCDNumber *d_number;
     QLabel *d_label;
+    std::chrono::steady_clock::time_point tp_;
 };
 

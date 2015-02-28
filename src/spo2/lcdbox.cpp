@@ -51,6 +51,11 @@ LCDBox::LCDBox( const QString& title
 void
 LCDBox::setValue( double value )
 {
-    d_number->display( value );
+    auto tp = std::chrono::steady_clock::now();
+    auto duration = std::chrono::duration_cast< std::chrono::milliseconds >( tp - tp_ );
+    if ( duration.count() > 500 ) {
+        tp_ = tp;
+        d_number->display( value );        
+    }
 }
 

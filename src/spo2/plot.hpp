@@ -15,8 +15,13 @@ class Plot: public QwtPlot
 public:
     Plot( const QString& title, QWidget* = NULL );
 
+    std::pair< int, double > sample( int pos = -1 );
+
 public Q_SLOTS:
     void setSettings( const Settings & );
+
+Q_SIGNALS:
+    void onData( double );
 
 protected:
     virtual void timerEvent( QTimerEvent *e );

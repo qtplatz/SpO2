@@ -29,6 +29,7 @@
 #include <QMap>
 #include <QPointer>
 #include <memory>
+#include <chrono>
 
 class Plot;
 class Knob;
@@ -102,6 +103,7 @@ private slots:
     void handleFeatureSelected( int );
     void handleFeatureActivated( int );
     void handleInstState( int );
+    void handleData( double );
 
 Q_SIGNALS:
     void amplitudeChanged( double );
@@ -111,8 +113,6 @@ Q_SIGNALS:
  private:
     QAction *actionSave;
     QToolBar *tb_;
-    // QStackedWidget * stacked_;
-
     Knob *d_frequencyKnob;
     Knob *d_amplitudeKnob;
     WheelBox *d_intervalWheel;
@@ -121,6 +121,7 @@ Q_SIGNALS:
     LCDBox * d_lcd1;
     LCDBox * d_lcd2;
     LCDBox * d_lcd3;
+    std::chrono::steady_clock::time_point tp_;
 };
 
 #endif // MAINWINDOW_HPP
