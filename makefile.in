@@ -1,0 +1,6 @@
+
+all:
+	msbuild spo2.sln /m /p:Configuration=Release
+
+package:
+	msbuild PACKAGE.vcxproj /m /p:Configuration=Release
