@@ -39,10 +39,19 @@ find_package( Boost 1.57 REQUIRED )
 add_definitions(-DUNICODE -D_UNICODE)
 
 if (WIN32)
+
   set(CMAKE_INSTALL_PREFIX C:/SpO2 )
   add_definitions(-D_SCL_SECURE_NO_WARNINGS)
+
+elseif( CMAKE_CROSSCOMPILING )
+
+  set( CMAKE_INSTALL_PREFIX /mnt/raspi-rootfs/opt/raspi/SpO2 ) 
+  set( QTDIR "/mnt/raspi-rootfs/opt/raspi/qt5pi" )
+  
 else()
+
   set(CMAKE_INSTALL_PREFIX /opt/local/SpO2 )  
+
 endif()
 
 set(CMAKE_DEBUG_POSTFIX d)
@@ -108,7 +117,20 @@ if ( _count GREATER 3 ) # count >= 4
 endif()
 
 include( CPackComponent )
-set( CPACK_GENERATOR WIX )
+
+if ( WIN32 )
+  set( CPACK_GENERATOR WIX )
+endif()
+
+if ( ${CMAKE_SYSTEM_NAME} MATCHES "Linux" )
+
+  set( CPACK_GENERATOR DEB )
+  set( CPACK_DEBIAN_PACKAGE_MAINTAINER "T. Hondo <toshi.hondo@qtplatz.com>" )
+  set( CPACK_DEBIAN_PACKAGE_VERSION "${VERSION}" )
+  # set( CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_CURRENT_SOURCE_DIR}/prerm;${CMAKE_CURRENT_SOURCE_DIR}/postinst" )
+  set( CPACK_DEBIAN_PACKAGE_ARCHITECTURE armhf )
+  
+endif()
 
 set( CPACK_PACKAGE_NAME "spo2" )
 set( CPACK_PACKAGE_VENDOR "ms-cheminfo.com" )
@@ -137,6 +159,7 @@ set( CPACK_PACKAGE_EXECUTABLES spo2 "SpO2" )
 set( CPACK_CREATE_DESKTOP_LINKS spo2 )
 
 if(WIN32)
+
   set( CPACK_INSTALL_PREFIX "C:/${CMAKE_PROJECT_NAME}" )
   install( FILES
     $ENV{VCINSTALLDIR}/redist/x64/Microsoft.VC120.CRT/msvcp120.dll
@@ -146,9 +169,10 @@ if(WIN32)
   string( REGEX REPLACE "\\\\" "/" QTDIR $ENV{QTDIR} )
   
 else()
+  
   set( CPACK_SET_DESTDIR ON )
   set( CPACK_INSTALL_PREFIX "/opt/${CMAKE_PROJECT_NAME}" )
-  set( QTDIR $ENV{QTDIR} )  
+
 endif()
 
 install( DIRECTORY
@@ -158,6 +182,14 @@ install( DIRECTORY
   ${QTDIR}/plugins/sqldrivers
   DESTINATION plugins )
 
-install( FILES ${QTDIR}/bin/qt.conf DESTINATION bin )  
+message( "##### INSTALL QTPLATZ DIR" ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} )
+
+if ( CMAKE_CROSSCOMPILING )
+  install( DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} DESTINATION lib )
+  install( DIRECTORY /mnt/raspi-rootfs/opt/raspi/qt5pi/lib DESTINATION qt5 )
+  install( FILES ${CMAKE_SOURCE_DIR}/../qt5/qtbase/bin/qt.conf DESTINATION bin )
+else()
+  install( FILES ${QTDIR}/bin/qt.conf DESTINATION bin )
+endif()
             
 include( CPack )
