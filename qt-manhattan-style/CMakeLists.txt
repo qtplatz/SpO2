@@ -80,7 +80,9 @@ add_definitions(-DQTMANHATTANSTYLE_LIBRARY)
 
 add_library(${PROJECT_NAME} SHARED ${SRCS} ${UI_HDRS} ${RC_SRCS})
 
-install( TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin COMPONENT applications )
+install( TARGETS ${PROJECT_NAME}
+  LIBRARY DESTINATION lib COMPONENT library
+  RUNTIME DESTINATION bin COMPONENT applications )
 
 # Link the target to its dependencies
 # The Qt5Widgets_LIBRARIES variable also includes QtGui and QtCore

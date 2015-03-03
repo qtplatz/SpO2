@@ -1,11 +1,19 @@
 
 project (spo2)
+
 cmake_minimum_required (VERSION 2.8.11)
 cmake_policy( SET CMP0020 NEW )
 
-#set( CMAKE_PREFIX_PATH C:/Qt/5.4/msvc2013_64_opengl C:/Qt/5.4/msvc2013_64_opengl/lib )
+if ( NOT CMAKE_CROSSCOMPILING )
+  set( CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}/.. )
+endif()
 
-find_path( qtplatz_DIR NAMES qtplatz-config.cmake HINTS ../qtplatz/build ../qtplatz/release_build ../qtplatz )
+find_path( qtplatz_DIR NAMES qtplatz-config.cmake
+  HINTS
+  /qtplatz/build
+  /qtplatz/release_build
+  /qtplatz )
+
 if ( qtplatz_DIR-NOTFIND )
   message( FATAL_ERROR "QtPlatz build dir not found" )
 endif()
@@ -22,7 +30,9 @@ set( CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${QTPLATZ_RUNTIME_OUTPUT_DIRECTORY} 
 
 set( CMAKE_POSITION_INDEPENDENT_CODE ON )
 
-configure_file( ${CMAKE_SOURCE_DIR}/makefile.in ${CMAKE_BINARY_DIR}/makefile )
+if ( WIN32 )
+  configure_file( ${CMAKE_SOURCE_DIR}/makefile.in ${CMAKE_BINARY_DIR}/makefile )
+endif()
 
 find_package( Boost 1.57 REQUIRED )
 
@@ -37,7 +47,7 @@ endif()
 
 set(CMAKE_DEBUG_POSTFIX d)
 
-set(QT_MANHATTAN_STYLE_DIR ./qt-manhattan-style)
+set(QT_MANHATTAN_STYLE_DIR ${CMAKE_SOURCE_DIR}/qt-manhattan-style)
 
 SET(CMAKE_INSTALL_NAME_DIR ./bin )
 

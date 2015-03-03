@@ -1,3 +1,5 @@
+cmake_policy( SET CMP0028 NEW )
+
 project( spo2 )
 
 add_definitions(-DQWT_NO_OPENGL)
@@ -53,7 +55,6 @@ else()
 endif()
 
 target_link_libraries( spo2 LINK_PUBLIC
-  Qt5::WinMain
   adplot
   adportable
   adutils
