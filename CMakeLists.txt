@@ -43,10 +43,14 @@ if (WIN32)
   set(CMAKE_INSTALL_PREFIX C:/SpO2 )
   add_definitions(-D_SCL_SECURE_NO_WARNINGS)
 
-elseif( CMAKE_CROSSCOMPILING )
+elseif ( ${CMAKE_SYSTEM_NAME} MATCHES "Linux" )  
 
-  set( CMAKE_INSTALL_PREFIX /mnt/raspi-rootfs/opt/raspi/SpO2 ) 
-  set( QTDIR "/mnt/raspi-rootfs/opt/raspi/qt5pi" )
+  if ( CMAKE_CROSSCOMPILING )
+    set( rootfs /mnt/raspi-rootfs )
+  endif()
+
+  set( CMAKE_INSTALL_PREFIX ${rootfs}/opt/raspi/SpO2 ) 
+  set( QTDIR ${rootfs}/opt/raspi/qt5pi )
   
 else()
 
@@ -120,6 +124,8 @@ include( CPackComponent )
 
 if ( WIN32 )
   set( CPACK_GENERATOR WIX )
+  set( CPACK_WIX_UPGRADE_GUID 2F5649B0-CAA6-4941-96E8-F8AE7C709692 )
+  
 endif()
 
 if ( ${CMAKE_SYSTEM_NAME} MATCHES "Linux" )
@@ -128,7 +134,9 @@ if ( ${CMAKE_SYSTEM_NAME} MATCHES "Linux" )
   set( CPACK_DEBIAN_PACKAGE_MAINTAINER "T. Hondo <toshi.hondo@qtplatz.com>" )
   set( CPACK_DEBIAN_PACKAGE_VERSION "${VERSION}" )
   # set( CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_CURRENT_SOURCE_DIR}/prerm;${CMAKE_CURRENT_SOURCE_DIR}/postinst" )
-  set( CPACK_DEBIAN_PACKAGE_ARCHITECTURE armhf )
+  if ( RTC_ARCH_ARM )
+    set( CPACK_DEBIAN_PACKAGE_ARCHITECTURE armhf )
+  endif()
   
 endif()
 
@@ -140,8 +148,6 @@ set( CPACK_PACKAGE_VERSION_MINOR ${version_minor} )
 set( CPACK_PACKAGE_VERSION_PATCH ${version_micro} )
 set( CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/license.txt )
 
-set( CPACK_WIX_UPGRADE_GUID 2F5649B0-CAA6-4941-96E8-F8AE7C709692 )
-
 cpack_add_component( applications DISPLAY_NAME "SpO2 Application"  DESCRIPTION "An extremely useful application" GROUP Runtime )
 cpack_add_component( libraries DISPLAY_NAME "Libraries" DESCRIPTION "Static and import libraries" GROUP Development )
 cpack_add_component( headers DISPLAY_NAME "C++ Headers" DESCRIPTION "C++ header files for use with malpix" )
@@ -149,11 +155,11 @@ cpack_add_component( headers DISPLAY_NAME "C++ Headers" DESCRIPTION "C++ header 
 cpack_add_component_group(Runtime)
 cpack_add_component_group(Development  DESCRIPTION "All of the tools you'll ever need to develop software" )
 
-set(CPACK_COMPONENT_GROUP_DEVELOPMENT_PARENT_GROUP "Runtime")
-set(CPACK_ALL_INSTALL_TYPES Full Developer)
-set(CPACK_COMPONENT_LIBRARIES_INSTALL_TYPES Developer Full)
-set(CPACK_COMPONENT_HEADERS_INSTALL_TYPES Developer Full)
-set(CPACK_COMPONENT_APPLICATIONS_INSTALL_TYPES Full)
+set( CPACK_COMPONENT_GROUP_DEVELOPMENT_PARENT_GROUP "Runtime" )
+set( CPACK_ALL_INSTALL_TYPES Full Developer )
+set( CPACK_COMPONENT_LIBRARIES_INSTALL_TYPES Developer Full )
+set( CPACK_COMPONENT_HEADERS_INSTALL_TYPES Developer Full )
+set( CPACK_COMPONENT_APPLICATIONS_INSTALL_TYPES Full )
 
 set( CPACK_PACKAGE_EXECUTABLES spo2 "SpO2" )
 set( CPACK_CREATE_DESKTOP_LINKS spo2 )
@@ -182,11 +188,9 @@ install( DIRECTORY
   ${QTDIR}/plugins/sqldrivers
   DESTINATION plugins )
 
-message( "##### INSTALL QTPLATZ DIR" ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} )
-
 if ( CMAKE_CROSSCOMPILING )
   install( DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} DESTINATION lib )
-  install( DIRECTORY /mnt/raspi-rootfs/opt/raspi/qt5pi/lib DESTINATION qt5 )
+  install( DIRECTORY ${rootfs}/opt/raspi/qt5pi/lib DESTINATION qt5 )
   install( FILES ${CMAKE_SOURCE_DIR}/../qt5/qtbase/bin/qt.conf DESTINATION bin )
 else()
   install( FILES ${QTDIR}/bin/qt.conf DESTINATION bin )
