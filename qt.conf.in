@@ -1,0 +1,8 @@
+[Paths]
+Prefix=/opt/raspi/qt5pi
+Documentation=doc
+Headers=include
+Libraries=lib
+LibraryExecutables=lib
+Binaries=bin
+Plugins=plugins

@@ -8,11 +8,8 @@ if ( NOT CMAKE_CROSSCOMPILING )
   set( CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}/.. )
 endif()
 
-find_path( qtplatz_DIR NAMES qtplatz-config.cmake
-  HINTS
-  /qtplatz/build
-  /qtplatz/release_build
-  /qtplatz )
+find_path( qtplatz_DIR NAMES qtplatz-config.cmake  HINTS
+  /qtplatz/build  /qtplatz/release_build  /qtplatz )
 
 if ( qtplatz_DIR-NOTFIND )
   message( FATAL_ERROR "QtPlatz build dir not found" )
@@ -32,6 +29,9 @@ set( CMAKE_POSITION_INDEPENDENT_CODE ON )
 
 if ( WIN32 )
   configure_file( ${CMAKE_SOURCE_DIR}/makefile.in ${CMAKE_BINARY_DIR}/makefile )
+elseif ( ${CMAKE_SYSTEM} MATCHES "Linux" )
+  configure_file( ${CMAKE_SOURCE_DIR}/postinst.in ${CMAKE_BINARY_DIR}/postinst @ONLY ) 
+  configure_file( ${CMAKE_SOURCE_DIR}/qt.conf.in ${CMAKE_BINARY_DIR}/qt.conf @ONLY ) 
 endif()
 
 find_package( Boost 1.57 REQUIRED )
@@ -148,19 +148,6 @@ set( CPACK_PACKAGE_VERSION_MINOR ${version_minor} )
 set( CPACK_PACKAGE_VERSION_PATCH ${version_micro} )
 set( CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/license.txt )
 
-cpack_add_component( applications DISPLAY_NAME "SpO2 Application"  DESCRIPTION "An extremely useful application" GROUP Runtime )
-cpack_add_component( libraries DISPLAY_NAME "Libraries" DESCRIPTION "Static and import libraries" GROUP Development )
-cpack_add_component( headers DISPLAY_NAME "C++ Headers" DESCRIPTION "C++ header files for use with malpix" )
-
-cpack_add_component_group(Runtime)
-cpack_add_component_group(Development  DESCRIPTION "All of the tools you'll ever need to develop software" )
-
-set( CPACK_COMPONENT_GROUP_DEVELOPMENT_PARENT_GROUP "Runtime" )
-set( CPACK_ALL_INSTALL_TYPES Full Developer )
-set( CPACK_COMPONENT_LIBRARIES_INSTALL_TYPES Developer Full )
-set( CPACK_COMPONENT_HEADERS_INSTALL_TYPES Developer Full )
-set( CPACK_COMPONENT_APPLICATIONS_INSTALL_TYPES Full )
-
 set( CPACK_PACKAGE_EXECUTABLES spo2 "SpO2" )
 set( CPACK_CREATE_DESKTOP_LINKS spo2 )
 
@@ -181,17 +168,10 @@ else()
 
 endif()
 
-install( DIRECTORY
-  ${QTDIR}/plugins/iconengines
-  ${QTDIR}/plugins/imageformats
-  ${QTDIR}/plugins/platforms
-  ${QTDIR}/plugins/sqldrivers
-  DESTINATION plugins )
-
 if ( CMAKE_CROSSCOMPILING )
+  # whole qtplatz libraries to be installed to lib, which actually lib/qtplatz
   install( DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} DESTINATION lib )
-  install( DIRECTORY ${rootfs}/opt/raspi/qt5pi/lib DESTINATION qt5 )
-  install( FILES ${CMAKE_SOURCE_DIR}/../qt5/qtbase/bin/qt.conf DESTINATION bin )
+  install( FILES ${CMAKE_BINARY_DIR}/qt.conf DESTINATION bin )
 else()
   install( FILES ${QTDIR}/bin/qt.conf DESTINATION bin )
 endif()
