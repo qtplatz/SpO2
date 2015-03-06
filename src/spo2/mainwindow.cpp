@@ -100,13 +100,13 @@ MainWindow::MainWindow(QWidget *parent) : Manhattan::FancyMainWindow(parent)
     //--------
     const double intervalLength = 10.0; // seconds
 
-    d_plot1 = new Plot3( "&lambda;<sub>1</sub>/&lambda;<sub>2</sub>", this );
-    d_plot2 = new Plot( "Pressure", this );
+    d_plot1 = new Plot3( "660nm/940nm", this );
+    d_plot2 = new Plot( "Stress", this );
     d_plot1->setMinimumHeight( 20 );
     d_plot2->setMinimumHeight( 20 );
     // d_plot1->enableAxis( QwtPlot::yRight );
     d_plot1->setAxisTitle( QwtPlot::yLeft, "Ratio" );
-    d_plot2->setAxisTitle( QwtPlot::yLeft, "kPa" );
+    d_plot2->setAxisTitle( QwtPlot::yLeft, "g" );
 
 	//d_plot->setIntervalLength(intervalLength);
 
@@ -123,10 +123,10 @@ MainWindow::MainWindow(QWidget *parent) : Manhattan::FancyMainWindow(parent)
     // d_timerWheel->setValue( 10.0 );
 
     auto gridLayout = new QGridLayout();
-    d_lcd1 = new LCDBox( "&lambda;<sub>1</sub>", gridLayout, 0 );
-    d_lcd2 = new LCDBox( "&lambda;<sub>2</sub>", gridLayout, 1 );
-    d_lcd3 = new LCDBox( "&lambda;<sub>1</sub>/&lambda;<sub>2</sub>", gridLayout, 2 );
-    gridLayout->setColumnStretch( 0, 10 );
+    d_lcd1 = new LCDBox( "660nm", gridLayout, 0 );
+    d_lcd2 = new LCDBox( "940nm", gridLayout, 1 );
+    d_lcd3 = new LCDBox( "660nm/940nm", gridLayout, 2 );
+    //gridLayout->setColumnStretch( 0, 10 );
 
     QVBoxLayout* vLayout1 = new QVBoxLayout();
     vLayout1->addWidget( d_intervalWheel );
