@@ -35,7 +35,7 @@ LCDBox::LCDBox( const QString& title
 {
     d_number->setSegmentStyle( QLCDNumber::Filled );
     d_number->setAutoFillBackground( true );
-    d_number->setFixedHeight( d_number->sizeHint().height() * 2 );
+    d_number->setFixedHeight( d_number->sizeHint().height() * 4 );
     QPalette pal( Qt::black );
     pal.setColor( QPalette::WindowText, Qt::green );
     d_number->setPalette( pal );

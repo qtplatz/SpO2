@@ -125,8 +125,8 @@ MainWindow::MainWindow(QWidget *parent) : Manhattan::FancyMainWindow(parent)
     auto gridLayout = new QGridLayout();
     d_lcd1 = new LCDBox( "660nm", gridLayout, 0 );
     d_lcd2 = new LCDBox( "940nm", gridLayout, 1 );
-    d_lcd3 = new LCDBox( "660nm/940nm", gridLayout, 2 );
-    //gridLayout->setColumnStretch( 0, 10 );
+    d_lcd3 = new LCDBox( "Ratio", gridLayout, 2 );
+    gridLayout->setColumnStretch( 0, 10 );
 
     QVBoxLayout* vLayout1 = new QVBoxLayout();
     vLayout1->addWidget( d_intervalWheel );
@@ -145,7 +145,7 @@ MainWindow::MainWindow(QWidget *parent) : Manhattan::FancyMainWindow(parent)
 
     layout->addLayout( vLayout2 );
     layout->addLayout( vLayout1 );
-    layout->setStretchFactor( vLayout2, 10 );
+    //layout->setStretchFactor( vLayout2, 10 ); // <plots>|<LCD>
 
     connect( d_amplitudeKnob, SIGNAL( valueChanged( double ) ), SIGNAL( amplitudeChanged( double ) ) );
     connect( d_frequencyKnob, SIGNAL( valueChanged( double ) ), SIGNAL( frequencyChanged( double ) ) );

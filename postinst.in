@@ -3,6 +3,7 @@
 echo "SpO2 post installation..."
 
 if [ "$1" = "configure" ]; then
-   echo "@INSTALL_DIRECTORY@/lib" > /etc/ld.so.conf.d/spo2.conf
-   ldconfig
+    echo "@INSTALL_DIRECTORY@/lib" > /etc/ld.so.conf.d/spo2.conf
+    echo "@INSTALL_DIRECTORY@/lib/qtplatz" >> /etc/ld.so.conf.d/spo2.conf    
+    ldconfig
 fi
